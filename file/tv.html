@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="icon" type="image/x-icon">
+    <title>tv - simplycast</title>
+</head>
+<body>
+    <img src="" height="" width="">
+    <script src="https://cdn.socket.io/3.0.0/socket.io.js"></script>
+    <script>
+        var socket = io();
+        var image = document.querySelector("img")
+        
+        image.height = screen.height
+        image.width = screen.width
+
+        socket.on('image', function(msg) {
+            image.src = msg
+        });
+        window.addEventListener('beforeunload', function(e) { 
+	        socket.emit('system', "TVdisconected")
+        }); 
+        socket.emit('system', "TVconected")
+    </script>
+</body>
+</html>
