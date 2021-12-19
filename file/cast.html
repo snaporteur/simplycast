@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="icon" type="image/x-icon">
+    <style>
+        body {
+            margin-left: 0px;
+            margin-top: 0px;
+        }
+        #image-preview {
+            position: fixed;
+            z-index: 1;
+            background-color: gray;
+            top: -1px;
+        }
+        #errormessages {
+            position: fixed;
+            z-index: 2;
+            bottom: 100px;
+            left: 35%;
+            background-color: black;
+            border-radius: 30px;
+            width: 30%;
+            padding: 5px;
+            color: white;
+        }
+        #upbody {
+            position: fixed;
+            z-index: 2;
+            bottom: 30px;
+            left: 35%;
+            background-color: black;
+            padding: 5px;
+            width: 30%;
+            border-radius: 10px;
+        }
+        .on-off_button {
+            padding: 20px;
+            border-radius: 15px;
+            border: none;
+            color: black;
+            background-color: yellow;
+        }
+        .on-off_button:disabled {
+            color: rgb(212, 198, 198);
+            background-color: rgb(134, 134, 11);
+        }
+        #messages {
+            position: fixed;
+            left: 39%;
+            bottom: 115px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+    <title>partage désactivée - simplycast</title>
+</head>
+<body>
+    <div id="errormessages"><img style="background-color: red;border-radius: 50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAfBJREFUWEftl+8xBEEQxd9FQAaI4IgAIYiAy0AGyEAGiIAMEIETATIgAuqpGdXmZvrP7Bb74ebLXt3O3fvt6+7p3hkmtmYT48EayIrIWA4dAPgE8GgJWveHAm0DuAWwm4SWAI4AvFrCrftDgR4A7Bd/zu8O/wOIYbpvCBOIYOE1xCGGZ54Ub9L1WIRuL0wDdJf9CYCrJPgBgLnExdzZSJ8XAK6jUL0OUXgriV0AOE+feT0TcDt/AVRz5z0Jbw51KeoQBZ9EiKQ72YzSJeZSBjYNiwJJsbd0/pRihGbC10I6KhCFXgDwyqUlrQwrgZlLLpciDpXu5MqS38sQthJfdckLpLnTAupyyQvE8yQfes+id/FpW0C8Vx6ehBzsEEPD3MmrbAsaUNlemEtq4/U4JN3heEERuTQg7pMNmC1GdckCstyxQsb7IZcsIPl0NXc8QKVL6niiAXmfjPtyGClWGzs8Tn+ngQYUir1VPanz50ptutQC8rrjDRn3uVxqAUXOD6vKpHmyYqmxMsTVgLTxohaZCJA5ntSAZO7UxgtHuqhb5AOsVG4NiO9XeV16u3SAki6div2/GCyHAjpdW10O8aWPYcvDepeS40d8OWA1M7l/VqvKWKLcnGcex/+HtnBYu6s1Wqt1hFTG2LwGslycnENfaSp/Jf/JTgEAAAAASUVORK5CYII="/><span id="messages"></span></div>
+    <div id="upbody">
+        <button id="start" class="on-off_button" disabled>Démarer le partage</button>
+        <button>parametre</button>
+    </div>
+    <canvas id="input-image" height="900px" width="1950px" style="display: none;"></canvas>
+    <img src="" alt="" id="image-preview">
+    <video id="video" height="500px" width="800px" style="display: none;" autoplay></video>
+<br>
+
+<strong>Log:</strong>
+<br>
+<pre id="log"></pre>
+    <script src="capturescreen"></script>
+    <script src="https://cdn.socket.io/3.0.0/socket.io.js"></script>
+    <script>
+        var socket = io();
+        var start = document.getElementById("start");
+        var image_preview = document.getElementById("image-preview");
+        var image = document.getElementById('input-image');
+        var ctx = image.getContext("2d");
+        var video = document.getElementById("video")
+        var error_messages = document.getElementById("errormessages")
+        var error_messages_text = document.querySelector("#errormessages #messages")
+        var title = document.querySelector("title")
+
+        image_preview.height = screen.height
+        image_preview.width = screen.width
+
+        error_messages_text.innerHTML = "aucune TV conecter"
+
+        socket.on('system', function(msg) {
+            if(msg == "TVconected") {
+                start.disabled = false
+                error_messages.style = "display: none;"
+            }
+            if(msg == "TVdisconected") {
+                start.disabled = true
+                error_messages.style = "display: block;"
+            }
+        });
+
+        start.addEventListener("click", function() {
+            start.disabled = true
+            title.innerText = "partage activée"
+            setInterval(() => {
+                ctx.clearRect(0, 0, 1950, 900);
+                ctx.drawImage(video, 0, 0, 1950, 900);
+                image_preview.src = image.toDataURL();
+                socket.emit('image', image.toDataURL());
+            }, 650)
+        })
+    </script>
+</body>
+</html>
