@@ -5,6 +5,9 @@ const io = require('socket.io')(http);
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
+app.get('/share', (req, res) => {
+  res.sendFile(__dirname + '/sharefile.html');
+});
 app.get('/cast', (req, res) => {
   res.sendFile(__dirname + '/cast.html');
 });
