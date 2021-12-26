@@ -17,6 +17,9 @@ app.get('/tv', (req, res) => {
 app.get('/capturescreen', (req, res) => {
   res.sendFile(__dirname + '/capturescreen.js');
 });
+app.get('/inputfile', (req, res) => {
+  res.sendFile(__dirname + '/inputfile.js');
+});
 app.get('/icon', (req, res) => {
   res.sendFile(__dirname + '/icon.ico');
 });

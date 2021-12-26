@@ -8,65 +8,22 @@
 <body>
     <input type="file" id="file" accept=".jpg, .jpeg, .png, .mp4">
     <button id="share">partager</button>
+    <img src="" alt="" height="1000px" width="1000px"><br>
+    <canvas id="canvas-calculate"></canvas><br>
+    <video src="" height="1000px" width="1000px" style="display: none;" controls id="calculate-video"></video>
+    <img src="" alt="" height="1000px" width="1000px" style="display: none;" id="calculate-image">
+    <span id="url"></span>
+    <span id="type"></span>
+    <script src="inputfile"></script>
     <script>
-        var input = document.querySelector('#file');
-var body = document.querySelector('body');
+      var canvas_calculate = document.getElementById("#canvas-calculate")
+      var ctx = canvas_calculate.getContext("2d")
+      var url = document.getElementById("url")
+      var share = document.getElementById("share")
 
-input.addEventListener('change', updateImageDisplay);
-
-function updateImageDisplay() {
-  var curFiles = input.files;
-  if(curFiles.length === 0) {
-  } else {
-    for(var i = 0; i < curFiles.length; i++) {
-      if(validFileType(curFiles[i]) == 1) {
-        var image = document.createElement('img');
-        image.src = window.URL.createObjectURL(curFiles[i]);
-
-        body.appendChild(image);
-
-      } else {
-        alert("ERROR")
-      }
-    }
-  }
-}
-
-var fileTypesImage = [
-  'image/jpeg',
-  'image/pjpeg',
-  'image/png'
-]
-var fileTypesVideo = [
-  'image/jpeg',
-  'image/pjpeg',
-  'image/png'
-]
-
-function validFileType(file) {
-  for(var i = 0; i < fileTypesImage.length; i++) {
-    if(file.type === fileTypesImage[i]) {
-      return 1;
-    }
-  }
-  for(var i = 0; i < fileTypesImage.length; i++) {
-    if(file.type === fileTypesImage[i]) {
-      return 1;
-    }
-  }
-
-  return 0;
-}
-
-function returnFileSize(number) {
-  if(number < 1024) {
-    return number + ' octets';
-  } else if(number >= 1024 && number < 1048576) {
-    return (number/1024).toFixed(1) + ' Ko';
-  } else if(number >= 1048576) {
-    return (number/1048576).toFixed(1) + ' Mo';
-  }
-}
+      setInterval(() => {
+        ctx.drawImage(url.innerHTML, 1000, 1000)
+      }, 500);
     </script>
 </body>
 </html>
